@@ -4600,7 +4600,12 @@ Backup created: /var/www/html.backup_20260322_120545.tar.gz
 
 ```bash
 # Dependencies:
-#   - openssl or /dev/urandom
+#   - openssl (optional, preferred) or /dev/urandom
+#   - seq
+#   - tr
+#   - cut
+#   - fold
+#   - head
 
 function GeneratePassword() {
 
