@@ -4360,6 +4360,10 @@ When you get a shell, it is generally not very clean, but after following these 
 
 - [Domain resolve](#domain-resolve)
 - [Get ASN](#get-asn)
+- [Port check](#port-check)
+- [Extract archive](#extract-archive)
+- [Make backup](#make-backup)
+- [Generate password](#generate-password)
 
 ###### Domain resolve
 
@@ -4439,4 +4443,201 @@ shell> GetASN 1.1.1.1
 
 shell> GetASN 0.0.0.0
 Unsuccessful ASN gathering.
+```
+
+###### Port check
+
+```bash
+# Dependencies:
+#   - nc (netcat) or timeout+bash
+
+function PortCheck() {
+
+  local _host="$1"
+  local _port="$2"
+  local _timeout="${3:-5}"
+
+  if [[ -z "$_host" ]] || [[ -z "$_port" ]]; then
+    echo -en "Usage: PortCheck <host> <port> [timeout]\\n"
+    return 1
+  fi
+
+  if command -v nc &>/dev/null; then
+    nc -z -w "$_timeout" "$_host" "$_port" &>/dev/null
+  else
+    timeout "$_timeout" bash -c "cat < /dev/null > /dev/tcp/${_host}/${_port}" &>/dev/null
+  fi
+
+  if [[ $? -eq 0 ]]; then
+    echo -en "$_host:$_port is open\\n"
+  else
+    echo -en "$_host:$_port is closed or unreachable\\n"
+  fi
+
+}
+```
+
+Example:
+
+```bash
+shell> PortCheck google.com 443
+google.com:443 is open
+
+shell> PortCheck google.com 9999
+google.com:9999 is closed or unreachable
+```
+
+###### Extract archive
+
+```bash
+# Dependencies:
+#   - tar, unzip, gunzip, bunzip2, unrar, 7z, etc. (based on archive type)
+
+function ExtractArchive() {
+
+  local _archive="$1"
+
+  if [[ -z "$_archive" ]]; then
+    echo -en "Usage: ExtractArchive <archive_file>\\n"
+    return 1
+  fi
+
+  if [[ ! -f "$_archive" ]]; then
+    echo -en "Error: File '$_archive' not found\\n"
+    return 1
+  fi
+
+  case "$_archive" in
+    *.tar.bz2)   tar xjf "$_archive"     ;;
+    *.tar.gz)    tar xzf "$_archive"     ;;
+    *.tar.xz)    tar xJf "$_archive"     ;;
+    *.bz2)       bunzip2 "$_archive"     ;;
+    *.rar)       unrar x "$_archive"     ;;
+    *.gz)        gunzip "$_archive"      ;;
+    *.tar)       tar xf "$_archive"      ;;
+    *.tbz2)      tar xjf "$_archive"     ;;
+    *.tgz)       tar xzf "$_archive"     ;;
+    *.zip)       unzip "$_archive"       ;;
+    *.Z)         uncompress "$_archive"  ;;
+    *.7z)        7z x "$_archive"        ;;
+    *)           echo -en "Error: '$_archive' - unknown archive format\\n" ; return 1 ;;
+  esac
+
+  if [[ $? -eq 0 ]]; then
+    echo -en "Successfully extracted: $_archive\\n"
+  else
+    echo -en "Failed to extract: $_archive\\n"
+  fi
+
+}
+```
+
+Example:
+
+```bash
+shell> ExtractArchive package.tar.gz
+Successfully extracted: package.tar.gz
+
+shell> ExtractArchive unknown.abc
+Error: 'unknown.abc' - unknown archive format
+```
+
+###### Make backup
+
+```bash
+# Dependencies:
+#   - cp or tar
+
+function MakeBackup() {
+
+  local _target="$1"
+  local _timestamp=$(date +%Y%m%d_%H%M%S)
+
+  if [[ -z "$_target" ]]; then
+    echo -en "Usage: MakeBackup <file_or_directory>\\n"
+    return 1
+  fi
+
+  if [[ ! -e "$_target" ]]; then
+    echo -en "Error: '$_target' does not exist\\n"
+    return 1
+  fi
+
+  local _backup_name="${_target}.backup_${_timestamp}"
+
+  if [[ -d "$_target" ]]; then
+    tar -czf "${_backup_name}.tar.gz" "$_target" 2>/dev/null
+    if [[ $? -eq 0 ]]; then
+      echo -en "Backup created: ${_backup_name}.tar.gz\\n"
+    else
+      echo -en "Failed to create backup of directory: $_target\\n"
+      return 1
+    fi
+  else
+    cp -p "$_target" "$_backup_name" 2>/dev/null
+    if [[ $? -eq 0 ]]; then
+      echo -en "Backup created: $_backup_name\\n"
+    else
+      echo -en "Failed to create backup of file: $_target\\n"
+      return 1
+    fi
+  fi
+
+}
+```
+
+Example:
+
+```bash
+shell> MakeBackup /etc/hosts
+Backup created: /etc/hosts.backup_20260322_120530
+
+shell> MakeBackup /var/www/html
+Backup created: /var/www/html.backup_20260322_120545.tar.gz
+```
+
+###### Generate password
+
+```bash
+# Dependencies:
+#   - openssl (optional, preferred) or /dev/urandom
+#   - seq
+#   - tr
+#   - cut
+#   - fold
+#   - head
+
+function GeneratePassword() {
+
+  local _length="${1:-16}"
+  local _count="${2:-1}"
+
+  if ! [[ "$_length" =~ ^[0-9]+$ ]] || [[ $_length -lt 8 ]]; then
+    echo -en "Usage: GeneratePassword [length] [count]\\n"
+    echo -en "       length must be >= 8 (default: 16)\\n"
+    echo -en "       count is number of passwords (default: 1)\\n"
+    return 1
+  fi
+
+  for i in $(seq 1 "$_count"); do
+    if command -v openssl &>/dev/null; then
+      openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$_length"
+    else
+      cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w "$_length" | head -n 1
+    fi
+  done
+
+}
+```
+
+Example:
+
+```bash
+shell> GeneratePassword
+7wJQw9X2vK8pN3mL
+
+shell> GeneratePassword 20 3
+Bx4kN9mP2qR8sT5vW3xY
+C6dF8gH1jK4lM7nP9qR2
+E3fG5hJ8kL1mN4pQ7rS0
 ```
