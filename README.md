@@ -4465,7 +4465,8 @@ function PortCheck() {
   if command -v nc &>/dev/null; then
     nc -z -w "$_timeout" "$_host" "$_port" &>/dev/null
   else
-    timeout "$_timeout" bash -c "cat < /dev/null > /dev/tcp/${_host}/${_port}" &>/dev/null
+    # ⚡ Bolt: Use bash built-in redirection to avoid 'cat' sub-process fork overhead
+    timeout "$_timeout" bash -c "</dev/tcp/${_host}/${_port}" &>/dev/null
   fi
 
   if [[ $? -eq 0 ]]; then
@@ -4619,13 +4620,18 @@ function GeneratePassword() {
     return 1
   fi
 
-  for i in $(seq 1 "$_count"); do
-    if command -v openssl &>/dev/null; then
+  # ⚡ Bolt: Moved 'command -v openssl' outside loop to evaluate only once.
+  if command -v openssl &>/dev/null; then
+    # ⚡ Bolt: Use native bash loop instead of subshell '$(seq)' fork overhead
+    for ((i=1; i<=_count; i++)); do
       openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$_length"
-    else
-      cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w "$_length" | head -n 1
-    fi
-  done
+    done
+  else
+    for ((i=1; i<=_count; i++)); do
+      # ⚡ Bolt: Use bash input redirection instead of 'cat' sub-process fork overhead
+      tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w "$_length" | head -n 1
+    done
+  fi
 
 }
 ```
