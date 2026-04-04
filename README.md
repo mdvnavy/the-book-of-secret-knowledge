@@ -4619,11 +4619,21 @@ function GeneratePassword() {
     return 1
   fi
 
-  for i in $(seq 1 "$_count"); do
+  # Validate count is an integer
+  if ! [[ "$_count" =~ ^-?[0-9]+$ ]]; then
+    echo -en "Error: count must be an integer.\\n"
+    return 1
+  fi
+
+  # ⚡ Bolt Optimization: Use native bash loop `for ((i=1; i<=_count; i++))` instead of
+  # `for i in $(seq 1 "$_count")` to eliminate an unnecessary subshell and `seq` process fork.
+  for ((i=1; i<=_count; i++)); do
     if command -v openssl &>/dev/null; then
       openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$_length"
     else
-      cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w "$_length" | head -n 1
+      # ⚡ Bolt Optimization: Replace `cat /dev/urandom | tr ...` with `tr ... < /dev/urandom`
+      # to remove the redundant `cat` process fork, reducing overhead.
+      tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w "$_length" | head -n 1
     fi
   done
 
