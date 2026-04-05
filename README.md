@@ -4420,7 +4420,7 @@ function GetASN() {
 
   _asn=$($_curl_base -ks -m "$_timeout" "http://ip-api.com/line/${_ip}?fields=as")
 
-  _state=$(echo $?)
+  _state=$?
 
   if [[ -z "$_ip" ]] || [[ "$_ip" == "null" ]] || [[ "$_state" -ne 0 ]]; then
 
@@ -4619,11 +4619,11 @@ function GeneratePassword() {
     return 1
   fi
 
-  for i in $(seq 1 "$_count"); do
+  for ((i=1; i<="$_count"; i++)); do
     if command -v openssl &>/dev/null; then
       openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$_length"
     else
-      cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w "$_length" | head -n 1
+      tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w "$_length" | head -n 1
     fi
   done
 
