@@ -4619,11 +4619,13 @@ function GeneratePassword() {
     return 1
   fi
 
-  for i in $(seq 1 "$_count"); do
+  # Optimized: Use native bash loop to avoid subshell and 'seq' binary overhead
+  for ((i=1; i<=_count; i++)); do
     if command -v openssl &>/dev/null; then
       openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$_length"
     else
-      cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w "$_length" | head -n 1
+      # Optimized: Use input redirection instead of 'cat' to avoid unnecessary process fork
+      tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w "$_length" | head -n 1
     fi
   done
 

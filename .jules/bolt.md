@@ -1,0 +1,3 @@
+## 2024-05-24 - Bash Process Substitution Performance
+**Learning:** Shell scripts inside Markdown documentation often contain anti-patterns like using `seq` for loops and `cat` for reading files into pipes. These spawn unnecessary subshells and process forks, significantly slowing down loops when executed. Native bash arithmetic loops `((i=1; i<=N; i++))` and input redirection `< file` perform the same tasks without the overhead of forking external binaries.
+**Action:** Always prefer native Bash arithmetic constructs over `seq` and input redirection `<` over `cat |` when optimizing shell snippets.
