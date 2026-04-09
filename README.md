@@ -4601,7 +4601,6 @@ Backup created: /var/www/html.backup_20260322_120545.tar.gz
 ```bash
 # Dependencies:
 #   - openssl (optional, preferred) or /dev/urandom
-#   - seq
 #   - tr
 #   - cut
 #   - fold
@@ -4619,11 +4618,13 @@ function GeneratePassword() {
     return 1
   fi
 
-  for i in $(seq 1 "$_count"); do
+  # Performance: Use native bash loop instead of seq to avoid subshell and process fork
+  for ((i=1; i<=$_count; i++)); do
     if command -v openssl &>/dev/null; then
       openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$_length"
     else
-      cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w "$_length" | head -n 1
+      # Performance: Use input redirection instead of cat to avoid process fork
+      tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w "$_length" | head -n 1
     fi
   done
 
