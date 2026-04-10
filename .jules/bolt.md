@@ -1,0 +1,3 @@
+## 2024-06-25 - Avoid inline comments in documentation snippets
+**Learning:** Adding comments explaining performance optimizations directly inside bash snippets within README.md files clutters the documentation and makes it harder to read for users who just want to copy/paste the script. The repository "codebase" consists almost entirely of these README.md snippets, so maintaining their readability is critical.
+**Action:** When optimizing documented shell snippets, do not include inline comments explaining the optimizations (`# Optimized: ...`). Let the git history and PR description explain the change.
