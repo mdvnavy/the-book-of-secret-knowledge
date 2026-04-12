@@ -4619,13 +4619,22 @@ function GeneratePassword() {
     return 1
   fi
 
-  for i in $(seq 1 "$_count"); do
-    if command -v openssl &>/dev/null; then
+  if [[ "$_count" -lt 1 ]]; then
+    return 0
+  fi
+
+  local _has_openssl=0
+  if command -v openssl &>/dev/null; then
+    _has_openssl=1
+  fi
+
+  if [[ "$_has_openssl" -eq 1 ]]; then
+    for (( i=1; i<="$_count"; i++ )); do
       openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$_length"
-    else
-      cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w "$_length" | head -n 1
-    fi
-  done
+    done
+  else
+    tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w "$_length" | head -n "$_count"
+  fi
 
 }
 ```
