@@ -4380,7 +4380,7 @@ function DomainResolve() {
   local _timeout="15"
 
   _host_ip=$($_curl_base -ks -m "$_timeout" "https://dns.google.com/resolve?name=${_host}&type=A" | \
-  jq '.Answer[0].data' | tr -d "\"" 2>/dev/null)
+  jq -r '.Answer[0].data' 2>/dev/null)
 
   if [[ -z "$_host_ip" ]] || [[ "$_host_ip" == "null" ]] ; then
 
@@ -4465,7 +4465,7 @@ function PortCheck() {
   if command -v nc &>/dev/null; then
     nc -z -w "$_timeout" "$_host" "$_port" &>/dev/null
   else
-    timeout "$_timeout" bash -c "cat < /dev/null > /dev/tcp/${_host}/${_port}" &>/dev/null
+    timeout "$_timeout" bash -c "</dev/tcp/${_host}/${_port}" &>/dev/null
   fi
 
   if [[ $? -eq 0 ]]; then
