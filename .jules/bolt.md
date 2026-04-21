@@ -10,3 +10,7 @@
 ## 2024-04-18 - jq raw output vs piping to tr
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
+
+## 2024-05-18 - Unnecessary Process Forks with Cat Pipe in README Snippets
+**Learning:** Documented shell snippets in README.md often use `cat <file> | command` instead of native bash redirection `<file command`. This introduces an unnecessary process fork penalty for `cat`.
+**Action:** When working with shell snippet performance optimizations, replace `cat <file> | ...` with native bash input redirection `<file` whenever possible to eliminate the extra process fork without affecting functionality or readability.
