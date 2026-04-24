@@ -10,3 +10,7 @@
 ## 2024-04-18 - jq raw output vs piping to tr
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
+
+## 2024-05-18 - Avoid committing benchmarking scripts
+**Learning:** While ad-hoc scripts are useful to measure the impact of an optimization during the process, they shouldn't be committed to the repository if they are not part of an existing test suite. They create unnecessary clutter.
+**Action:** Always delete temporary benchmark or testing files after verifying the performance improvements, unless explicitly instructed to add formal tests.
