@@ -10,3 +10,6 @@
 ## 2024-04-18 - jq raw output vs piping to tr
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
+## 2024-05-24 - Bash Parameter Expansion Over External Subshells
+**Learning:** Using native bash parameter expansion (`%%` and `##`) is drastically faster than subshells spawning external binaries like `echo` and `cut`. Process forks are extremely expensive in bash scripts.
+**Action:** Always prefer native bash parameter expansion over external tools (like `cut`, `awk`, `grep`) when extracting simple substrings or manipulating variables within scripts.
