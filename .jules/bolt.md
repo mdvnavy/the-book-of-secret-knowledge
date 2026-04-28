@@ -10,3 +10,7 @@
 ## 2024-04-18 - jq raw output vs piping to tr
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
+
+## 2026-04-28 - Parameter Expansion for IPv6 Correctness
+**Learning:** Replacing `echo ... | cut` with native bash parameter expansion (`%%:*` and `##*:`) when parsing `host:port` pairs not only eliminates process forks for performance, but surprisingly fixes edge cases with IPv6 addresses (which contain multiple colons and break `cut -d ":" -f2`) and variables starting with `-e` or `-n` that `echo` would misinterpret.
+**Action:** Always prefer parameter expansion over `cut` for string splitting in bash, as it provides both a massive performance boost (no subshells) and improved correctness/safety for edge cases like IPv6.
