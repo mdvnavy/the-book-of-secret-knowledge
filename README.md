@@ -161,6 +161,10 @@ Only main chapters:
 <p>
 &nbsp;&nbsp; <a href="https://github.com/sharkdp/fd"><b>fd</b></a> - is a simple, fast and user-friendly alternative to find.<br>
 &nbsp;&nbsp; <a href="https://dev.yorhel.nl/ncdu"><b>ncdu</b></a> - is an easy to use, fast disk usage analyzer.<br>
+&nbsp;&nbsp; <a href="https://github.com/sharkdp/bat"><b>bat</b></a> - a cat clone with syntax highlighting and Git integration.<br>
+&nbsp;&nbsp; <a href="https://github.com/eza-community/eza"><b>eza</b></a> - a modern, maintained replacement for ls with color and icons support.<br>
+&nbsp;&nbsp; <a href="https://github.com/BurntSushi/ripgrep"><b>ripgrep</b></a> - recursively searches your current directory for a regex pattern, faster than grep.<br>
+&nbsp;&nbsp; <a href="https://github.com/bootandy/dust"><b>dust</b></a> - a more intuitive version of du written in Rust.<br>
 </p>
 
 ##### :black_small_square: Network
@@ -176,6 +180,7 @@ Only main chapters:
 &nbsp;&nbsp; <a href="https://github.com/gvb84/pbscan"><b>pbscan</b></a> - is a faster and more efficient stateless SYN scanner and banner grabber.<br>
 &nbsp;&nbsp; <a href="http://www.hping.org/"><b>hping</b></a> - is a command-line oriented TCP/IP packet assembler/analyzer.<br>
 &nbsp;&nbsp; <a href="https://github.com/traviscross/mtr"><b>mtr</b></a> - is a tool that combines the functionality of the 'traceroute' and 'ping' programs in a single tool.<br>
+&nbsp;&nbsp; <a href="https://github.com/orf/gping"><b>gping</b></a> - ping, but with a graph.<br>
 &nbsp;&nbsp; <a href="https://github.com/mehrdadrad/mylg"><b>mylg</b></a> - utility which combines the functions of the different network probes in one diagnostic tool.<br>
 &nbsp;&nbsp; <a href="http://netcat.sourceforge.net/"><b>netcat</b></a> - utility which reads and writes data across network connections, using the TCP/IP protocol.<br>
 &nbsp;&nbsp; <a href="http://www.dest-unreach.org/socat/"><b>socat</b></a> - utility which transfers data between two objects.<br>
@@ -319,6 +324,10 @@ Only main chapters:
 &nbsp;&nbsp; <a href="https://pcp.io/index.html"><b>Performance Co-Pilot</b></a> - a system performance analysis toolkit.<br>
 &nbsp;&nbsp; <a href="https://github.com/sharkdp/hexyl"><b>hexyl</b></a> - a command-line hex viewer.<br>
 &nbsp;&nbsp; <a href="https://github.com/p403n1x87/austin"><b>Austin</b></a> - Python frame stack sampler for CPython.<br>
+&nbsp;&nbsp; <a href="https://github.com/ClementTsang/bottom"><b>bottom</b></a> - a cross-platform graphical process/system monitor with a TUI written in Rust.<br>
+&nbsp;&nbsp; <a href="https://github.com/dalance/procs"><b>procs</b></a> - a modern replacement for ps written in Rust with human-readable output.<br>
+&nbsp;&nbsp; <a href="https://github.com/sharkdp/hyperfine"><b>hyperfine</b></a> - a command-line benchmarking tool with statistical analysis and warmup runs.<br>
+&nbsp;&nbsp; <a href="https://github.com/imsnif/bandwhich"><b>bandwhich</b></a> - terminal bandwidth utilization tool that shows network usage by process and connection.<br>
 </p>
 
 ##### :black_small_square: Log Analyzers
@@ -1289,6 +1298,10 @@ CyberTalks</b></a> - talks, interviews, and article about cybersecurity.<br>
 &nbsp;&nbsp; <a href="https://github.com/gentilkiwi/mimikatz"><b>mimikatz</b></a> - a little tool to play with Windows security.<br>
 &nbsp;&nbsp; <a href="https://github.com/sherlock-project/sherlock"><b>sherlock</b></a> - hunt down social media accounts by username across social networks.<br>
 &nbsp;&nbsp; <a href="https://owasp.org/www-project-threat-dragon/"><b>OWASP Threat Dragon</b></a> - is a tool used to create threat model diagrams and to record possible threats.<br>
+&nbsp;&nbsp; <a href="https://github.com/projectdiscovery/nuclei"><b>nuclei</b></a> - fast and customizable vulnerability scanner based on community-curated templates.<br>
+&nbsp;&nbsp; <a href="https://github.com/projectdiscovery/httpx"><b>httpx</b></a> - a fast and multi-purpose HTTP toolkit that allows running multiple probers using retryable http library.<br>
+&nbsp;&nbsp; <a href="https://github.com/projectdiscovery/katana"><b>katana</b></a> - a fast and fully configurable next-generation crawling and spidering framework.<br>
+&nbsp;&nbsp; <a href="https://github.com/ffuf/ffuf"><b>ffuf</b></a> - a fast web fuzzer written in Go for content discovery and parameter fuzzing.<br>
 </p>
 
 ##### :black_small_square: Pentests bookmarks collection
@@ -4364,6 +4377,7 @@ When you get a shell, it is generally not very clean, but after following these 
 - [Extract archive](#extract-archive)
 - [Make backup](#make-backup)
 - [Generate password](#generate-password)
+- [Check SSL certificate expiry](#check-ssl-certificate-expiry)
 
 ###### Domain resolve
 
@@ -4643,4 +4657,81 @@ shell> GeneratePassword 20 3
 Bx4kN9mP2qR8sT5vW3xY
 C6dF8gH1jK4lM7nP9qR2
 E3fG5hJ8kL1mN4pQ7rS0
+```
+
+###### Check SSL certificate expiry
+
+```bash
+# Dependencies:
+#   - openssl
+
+function CheckSSLCert() {
+
+  local _host="$1"
+  local _port="${2:-443}"
+  local _warn_days="${3:-30}"
+
+  if [[ -z "$_host" ]]; then
+    echo -en "Usage: CheckSSLCert <host> [port] [warn_days]\\n"
+    echo -en "       port defaults to 443, warn_days defaults to 30\\n"
+    return 1
+  fi
+
+  local _cert_info
+  _cert_info=$(echo | openssl s_client -servername "$_host" -connect "${_host}:${_port}" 2>/dev/null | \
+    openssl x509 -noout -dates -subject 2>/dev/null)
+
+  if [[ -z "$_cert_info" ]]; then
+    echo -en "Error: Could not retrieve certificate from ${_host}:${_port}\\n"
+    return 1
+  fi
+
+  local _expiry_date
+  _expiry_date=$(echo "$_cert_info" | grep "notAfter" | cut -d= -f2)
+
+  local _expiry_epoch
+  _expiry_epoch=$(date -d "$_expiry_date" +%s 2>/dev/null || date -j -f "%b %d %T %Y %Z" "$_expiry_date" +%s 2>/dev/null)
+
+  local _now_epoch
+  _now_epoch=$(date +%s)
+
+  local _days_left=$(( (_expiry_epoch - _now_epoch) / 86400 ))
+
+  local _subject
+  _subject=$(echo "$_cert_info" | grep "subject" | sed 's/subject=//')
+
+  echo -en "Host    : ${_host}:${_port}\\n"
+  echo -en "Subject : ${_subject}\\n"
+  echo -en "Expires : ${_expiry_date}\\n"
+  echo -en "Days left: ${_days_left}\\n"
+
+  if [[ $_days_left -lt 0 ]]; then
+    echo -en "Status  : EXPIRED\\n"
+    return 2
+  elif [[ $_days_left -lt $_warn_days ]]; then
+    echo -en "Status  : WARNING (expires in ${_days_left} days)\\n"
+    return 1
+  else
+    echo -en "Status  : OK\\n"
+  fi
+
+}
+```
+
+Example:
+
+```bash
+shell> CheckSSLCert google.com
+Host    : google.com:443
+Subject : CN = *.google.com
+Expires : Jun 16 08:27:57 2025 GMT
+Days left: 45
+Status  : OK
+
+shell> CheckSSLCert expired.badssl.com
+Host    : expired.badssl.com:443
+Subject : CN = *.badssl.com
+Expires : Apr 12 23:59:59 2015 GMT
+Days left: -3672
+Status  : EXPIRED
 ```
