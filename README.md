@@ -3726,8 +3726,8 @@ if [[ $# != 2 ]] ; then
 fi
 
 _listen_port="$1"
-_bk_host=$(echo "$2" | cut -d ":" -f1)
-_bk_port=$(echo "$2" | cut -d ":" -f2)
+_bk_host="${2%%:*}"
+_bk_port="${2##*:}"
 
 printf "  lport: %s\\nbk_host: %s\\nbk_port: %s\\n\\n" \
        "$_listen_port" "$_bk_host" "$_bk_port"
