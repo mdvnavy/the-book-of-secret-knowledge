@@ -10,3 +10,7 @@
 ## 2024-04-18 - jq raw output vs piping to tr
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
+
+## 2024-05-18 - Parameter Parsing Optimization in Shell Snippets
+**Learning:** Using `echo "$VAR" | cut -d ":" -f1` inside shell scripts introduces two unnecessary process forks per variable extraction, causing significant performance degradation when called repeatedly. Native bash parameter expansion (`${VAR%%:*}` and `${VAR##*:}`) achieves the exact same parsing without any external processes.
+**Action:** When optimizing shell script parsing logic, especially in loops or frequently called functions, always replace combinations of `echo` piped to `cut`, `awk`, or `sed` with native bash parameter expansions to eliminate process forks.
