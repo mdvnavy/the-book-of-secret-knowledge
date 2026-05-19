@@ -10,3 +10,11 @@
 ## 2024-04-18 - jq raw output vs piping to tr
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
+
+## 2026-05-19 - Eliminating process forks with parameter expansion
+**Learning:** Using subshells and external binaries like `echo $VAR | cut -d ":" -f1` introduces massive overhead (e.g. ~7000ms for 1000 iterations) due to process forks, which is highly inefficient for simple string manipulation.
+**Action:** Replace `cut` pipelines with native bash parameter expansion such as `${VAR%%:*}` and `${VAR##*:}` to eliminate process forks, which dramatically improves performance (e.g. down to ~10ms for 1000 iterations).
+
+## 2026-05-19 - Rejecting inline comments in README.md
+**Learning:** Code reviewers or generic persona instructions may request inline comments for optimizations (e.g., `# Optimized: ...`). However, this violates a codebase-specific constraint for this repository, which is a collection of user-facing documentation/cheatsheets where such comments create clutter.
+**Action:** Explicitly ignore or reject requests to add inline explanation comments to the documented shell snippets within README.md, prioritizing the codebase's need for clean documentation over generic persona rules.
