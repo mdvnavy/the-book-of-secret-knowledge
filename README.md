@@ -197,7 +197,7 @@ Only main chapters:
 &nbsp;&nbsp; <a href="https://github.com/troglobit/nemesis"><b>Nemesis</b></a> - packet manipulation CLI tool; craft and inject packets of several protocols.<br>
 &nbsp;&nbsp; <a href="https://github.com/packetfu/packetfu"><b>packetfu</b></a> - a mid-level packet manipulation library for Ruby.<br>
 &nbsp;&nbsp; <a href="https://scapy.net/"><b>Scapy</b></a> - packet manipulation library; forge, send, decode, capture packets of a wide number of protocols.<br>
-&nbsp;&nbsp; <a href="https://github.com/SecureAuthCorp/impacket"><b>impacket</b></a> - is a collection of Python classes for working with network protocols.<br>
+&nbsp;&nbsp; <a href="https://github.com/fortra/impacket"><b>impacket</b></a> - is a collection of Python classes for working with network protocols.<br>
 &nbsp;&nbsp; <a href="https://github.com/arthepsy/ssh-audit"><b>ssh-audit</b></a> - is a tool for SSH server auditing.<br>
 &nbsp;&nbsp; <a href="https://aria2.github.io/"><b>aria2</b></a> - is a lightweight multi-protocol & multi-source command-line download utility.<br>
 &nbsp;&nbsp; <a href="https://github.com/x-way/iptables-tracer"><b>iptables-tracer</b></a> - observe the path of packets through the iptables chains.<br>
@@ -212,8 +212,8 @@ Only main chapters:
 &nbsp;&nbsp; <a href="https://github.com/mschwager/fierce"><b>fierce</b></a> - is a DNS reconnaissance tool for locating non-contiguous IP space.<br>
 &nbsp;&nbsp; <a href="https://github.com/subfinder/subfinder"><b>subfinder</b></a> - is a subdomain discovery tool that discovers valid subdomains for websites.<br>
 &nbsp;&nbsp; <a href="https://github.com/aboul3la/Sublist3r"><b>sublist3r</b></a> - is a fast subdomains enumeration tool for penetration testers.<br>
-&nbsp;&nbsp; <a href="https://github.com/OWASP/Amass"><b>amass</b></a> - is tool that obtains subdomain names by scraping data sources, crawling web archives, and more.<br>
-&nbsp;&nbsp; <a href="https://github.com/google/namebench"><b>namebench</b></a> - provides personalized DNS server recommendations based on your browsing history.<br>
+&nbsp;&nbsp; <a href="https://github.com/owasp-amass/amass"><b>amass</b></a> - is tool that obtains subdomain names by scraping data sources, crawling web archives, and more.<br>
+&nbsp;&nbsp; <a href="https://github.com/projectdiscovery/dnsx"><b>dnsx</b></a> - is a fast and multi-purpose DNS toolkit for running DNS queries and reconnaissance workflows.<br>
 &nbsp;&nbsp; <a href="https://github.com/blechschmidt/massdns"><b>massdns</b></a> - is a high-performance DNS stub resolver for bulk lookups and reconnaissance.<br>
 &nbsp;&nbsp; <a href="https://github.com/guelfoweb/knock"><b>knock</b></a> - is a tool to enumerate subdomains on a target domain through a wordlist.<br>
 &nbsp;&nbsp; <a href="https://github.com/DNS-OARC/dnsperf"><b>dnsperf</b></a> - DNS performance testing tools.<br>
@@ -610,9 +610,9 @@ performance of any of your sites from across the globe.<br>
 &nbsp;&nbsp; <a href="https://hunter.io/"><b>hunter</b></a> - lets you find email addresses in seconds and connect with the people that matter for your business.<br>
 &nbsp;&nbsp; <a href="https://ghostproject.fr/"><b>GhostProject?</b></a> - search by full email address or username.<br>
 &nbsp;&nbsp; <a href="https://www.databreaches.live/"><b>databreaches</b></a> - was my email affected by data breach?<br>
-&nbsp;&nbsp; <a href="https://weleakinfo.com"><b>We Leak Info</b></a> - world's fastest and largest data breach search engine.<br>
+&nbsp;&nbsp; <a href="https://haveibeenpwned.com/"><b>have i been pwned?</b></a> - check if you have an account that has been compromised in a data breach.<br>
 &nbsp;&nbsp; <a href="https://pulsedive.com/"><b>Pulsedive</b></a> - scans of malicious URLs, IPs, and domains, including port scans and web requests.<br>
-&nbsp;&nbsp; <a href="https://buckets.grayhatwarfare.com/"><b>Buckets by Grayhatwarfar</b></a> - database with public search for Open Amazon S3 Buckets and their contents.<br>
+&nbsp;&nbsp; <a href="https://buckets.grayhatwarfare.com/"><b>Buckets by Grayhatwarfare</b></a> - database with public search for Open Amazon S3 Buckets and their contents.<br>
 &nbsp;&nbsp; <a href="https://vigilante.pw/"><b>Vigilante.pw</b></a> - the breached database directory.<br>
 &nbsp;&nbsp; <a href="https://builtwith.com/"><b>builtwith</b></a> - find out what websites are built with.<br>
 &nbsp;&nbsp; <a href="https://nerdydata.com/"><b>NerdyData</b></a> - search the web's source code for technologies, across millions of sites.<br>
@@ -620,8 +620,8 @@ performance of any of your sites from across the globe.<br>
 &nbsp;&nbsp; <a href="https://www.mmnt.net/"><b>Mamont's open FTP Index</b></a> - if a target has an open FTP site with accessible content it will be listed here.<br>
 &nbsp;&nbsp; <a href="https://osintframework.com/"><b>OSINT Framework</b></a> - focused on gathering information from free tools or resources.<br>
 &nbsp;&nbsp; <a href="https://www.maltiverse.com/search"><b>maltiverse</b></a> - is a service oriented to cybersecurity analysts.<br>
-&nbsp;&nbsp; <a href="https://leakedsource.ru/main/"><b>Leaked Source</b></a> - is a collaboration of data found online in the form of a lookup.<br>
-&nbsp;&nbsp; <a href="https://search.weleakinfo.com/"><b>We Leak Info</b></a> - to help everyday individuals secure their online life, avoiding getting hacked.<br>
+&nbsp;&nbsp; <a href="https://monitor.mozilla.org/"><b>Mozilla Monitor</b></a> - monitor your email addresses for known data breaches and get breach alerts.<br>
+&nbsp;&nbsp; <a href="https://www.dehashed.com/"><b>dehashed</b></a> - is a hacked database search engine.<br>
 &nbsp;&nbsp; <a href="https://pipl.com/"><b>pipl</b></a> - is the place to find the person behind the email address, social username or phone number.<br>
 &nbsp;&nbsp; <a href="https://abuse.ch/"><b>abuse.ch</b></a> - is operated by a random swiss guy fighting malware for non-profit.<br>
 &nbsp;&nbsp; <a href="http://malc0de.com/database/"><b>malc0de</b></a> - malware search engine.<br>
@@ -649,7 +649,7 @@ performance of any of your sites from across the globe.<br>
 <p>
 &nbsp;&nbsp; <a href="https://haveibeenpwned.com/"><b>have i been pwned?</b></a> - check if you have an account that has been compromised in a data breach.<br>
 &nbsp;&nbsp; <a href="https://www.dehashed.com/"><b>dehashed</b></a> - is a hacked database search engine.<br>
-&nbsp;&nbsp; <a href="https://leakedsource.ru/"><b>Leaked Source</b></a> - is a collaboration of data found online in the form of a lookup.<br>
+&nbsp;&nbsp; <a href="https://monitor.mozilla.org/"><b>Mozilla Monitor</b></a> - monitor your email addresses for known data breaches and get breach alerts.<br>
 </p>
 
 ##### :black_small_square: CVE/Exploits databases
