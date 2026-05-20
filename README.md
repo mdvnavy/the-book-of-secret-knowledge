@@ -3708,8 +3708,10 @@ __EOF__
 
 ```bash
 server> while : ; do \
-echo -ne "HTTP/1.1 200 OK\r\nContent-Length: $(wc -c <index.html)\r\n\r\n$(<index.html)" | \
-nc -l -p 5000 \
+{ \
+  printf 'HTTP/1.1 200 OK\r\nContent-Length: %s\r\n\r\n' "$(wc -c < index.html)"; \
+  cat index.html; \
+} | nc -l -p 5000 \
 ; done
 ```
 
