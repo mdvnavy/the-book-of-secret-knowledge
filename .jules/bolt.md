@@ -11,9 +11,5 @@
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
 ## 2026-05-20 - Parameter Expansion Over Subshells
-**Learning:** Replacing subshells and external binaries (`echo | cut`) with native bash parameter expansion can eliminate process forks and drastically improve performance in shell scripts. When parsing `host:port`-style values, make sure the expansion preserves the original field-extraction semantics: `${VAR##*:}` returns the substring after the last colon, so it is only equivalent to `cut -d ':' -f2` when the input is validated to contain exactly one colon.
-**Action:** Always prefer native bash parameter expansion over piping to external commands for simple string manipulation, but only when the chosen pattern matches the original command's behavior; for colon-delimited parsing, validate the input format or use an expansion that preserves the intended field extraction.
-
-## 2024-11-20 - [Performance] Shell optimizations using bash native features and awk
- **Learning:** Discovered that utilizing bash command substitution optimizations for file reads (like `$(<file)` instead of `cat file`), replacing `ps | grep` chains with `pgrep`, and single-pass `awk` grouping vs multi-pass `sort|uniq`, effectively avoids unnecessary external processes and improves shell script execution performance.
- **Action:** Prioritize `pgrep` when searching by process names, use bash redirection forms such as `$(<file)` for file reads or `</dev/tcp/...` where applicable to avoid unnecessary `cat` processes, and leverage `awk` arrays for distinct counts instead of `sort | uniq` when optimizing high throughput or looping shell scripts.
+**Learning:** Replacing subshells and external binaries (`echo | cut`) with native bash parameter expansion (`${VAR%%:*}` and `${VAR##*:}`) eliminates process forks and drastically improves performance in shell scripts.
+**Action:** Always prefer native bash parameter expansion over piping to external commands for simple string manipulation.
