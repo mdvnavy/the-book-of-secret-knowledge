@@ -10,3 +10,6 @@
 ## 2024-04-18 - jq raw output vs piping to tr
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
+## 2024-11-20 - [Performance] Shell optimizations using bash native features and awk
+ **Learning:** Discovered that utilizing bash command substitution optimizations for file reads (like `$(<file)` instead of `cat file`), replacing `ps | grep` chains with `pgrep`, and single-pass `awk` grouping vs multi-pass `sort|uniq`, effectively avoids unnecessary external processes and improves shell script execution performance.
+ **Action:** Prioritize `pgrep` when searching by process names, use bash redirection forms such as `$(<file)` for file reads or `</dev/tcp/...` where applicable to avoid unnecessary `cat` processes, and leverage `awk` arrays for distinct counts instead of `sort | uniq` when optimizing high throughput or looping shell scripts.
