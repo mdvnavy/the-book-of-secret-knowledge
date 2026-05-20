@@ -1,0 +1,14 @@
+Title: ⚡ Bolt: [performance improvement] Shell script optimizations
+
+Body:
+What: Optimized multiple shell command snippets in README.md by removing unnecessary process forks and improving efficiency.
+
+Why:
+- Replaced `sort | uniq` chains with `awk` associative arrays for faster distinct counting.
+- Eliminated `cat` forks inside loops in favor of native bash file redirection `$(<file)`.
+- Replaced multi-stage `ps | grep | awk` pipes with `pgrep`.
+
+Impact & Measurement:
+- Single-pass awk distinct counting has expected performance improvements over multi-pass sort/uniq, especially for large logs.
+- Native bash file descriptor redirection removes thousands of forks per minute inside loop servers.
+- `pgrep` reduces process spawns by combining three utilities (`ps`, `grep`, `awk`) into one, reducing overhead.
