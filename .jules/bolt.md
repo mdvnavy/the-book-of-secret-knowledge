@@ -11,5 +11,5 @@
 **Learning:** Piping `jq` string output to `tr -d "\""` creates an unnecessary process fork penalty. Using `jq -r` provides the exact same unquoted string natively, saving milliseconds and simplifying the snippet.
 **Action:** Always check if string processing utilities (`tr`, `sed`, `awk`) piped after `jq` can be replaced by native `jq` features like the `-r` flag to eliminate process forks.
 ## 2026-05-20 - Parameter Expansion Over Subshells
-**Learning:** Replacing subshells and external binaries (`echo | cut`) with native bash parameter expansion (`${VAR%%:*}` and `${VAR##*:}`) eliminates process forks and drastically improves performance in shell scripts.
-**Action:** Always prefer native bash parameter expansion over piping to external commands for simple string manipulation.
+**Learning:** Replacing subshells and external binaries (`echo | cut`) with native bash parameter expansion can eliminate process forks and drastically improve performance in shell scripts. When parsing `host:port`-style values, make sure the expansion preserves the original field-extraction semantics: `${VAR##*:}` returns the substring after the last colon, so it is only equivalent to `cut -d ':' -f2` when the input is validated to contain exactly one colon.
+**Action:** Always prefer native bash parameter expansion over piping to external commands for simple string manipulation, but only when the chosen pattern matches the original command's behavior; for colon-delimited parsing, validate the input format or use an expansion that preserves the intended field extraction.
