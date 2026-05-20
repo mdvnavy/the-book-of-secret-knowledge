@@ -1856,7 +1856,7 @@ _after_logout() {
 
   username=$(whoami)
 
-  for _pid in $(ps afx | grep sshd | grep "$username" | awk '{print $1}') ; do
+  for _pid in $(pgrep -u "$username" sshd) ; do
 
     kill -9 $_pid
 
@@ -2032,7 +2032,7 @@ ps awwfux | less -S
 ###### Processes per user counter
 
 ```bash
-ps hax -o user | sort | uniq -c | sort -r
+ps hax -o user | awk '{a[$1]++} END {for (i in a) print a[i], i}' | sort -nr
 ```
 
 ###### Show all processes by name with main header
@@ -2258,14 +2258,14 @@ timeout 30 strace $(< /var/run/zabbix/zabbix_agentd.pid)
 ###### Track processes and redirect output to a file
 
 ```bash
-ps auxw | grep '[a]pache' | awk '{print " -p " $2}' | \
+pgrep apache | awk '{print " -p " $1}' | \
 xargs strace -o /tmp/strace-apache-proc.out
 ```
 
 ###### Track with print time spent in each syscall and limit length of print strings
 
 ```bash
-ps auxw | grep '[i]init_policy' | awk '{print " -p " $2}' | \
+pgrep init_policy | awk '{print " -p " $1}' | \
 xargs strace -f -e trace=network -T -s 10000
 ```
 
@@ -2354,7 +2354,7 @@ tail -f file | while read ; do echo "$(date +%T.%N) $REPLY" ; done
 ###### Analyse an Apache access log for the most common IP addresses
 
 ```bash
-tail -10000 access_log | awk '{print $1}' | sort | uniq -c | sort -n | tail
+tail -10000 access_log | awk '{a[$1]++} END {for (i in a) print a[i], i}' | sort -n | tail
 ```
 
 ###### Analyse web server log and show only 5xx http codes
@@ -3708,8 +3708,10 @@ __EOF__
 
 ```bash
 server> while : ; do \
-(echo -ne "HTTP/1.1 200 OK\r\nContent-Length: $(wc -c <index.html)\r\n\r\n" ; cat index.html;) | \
-nc -l -p 5000 \
+{ \
+  printf 'HTTP/1.1 200 OK\r\nContent-Length: %s\r\n\r\n' "$(wc -c < index.html)"; \
+  cat index.html; \
+} | nc -l -p 5000 \
 ; done
 ```
 
