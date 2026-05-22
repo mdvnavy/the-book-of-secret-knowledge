@@ -1856,7 +1856,7 @@ _after_logout() {
 
   username=$(whoami)
 
-  for _pid in $(ps afx | grep sshd | grep "$username" | awk '{print $1}') ; do
+  for _pid in $(pgrep -f "sshd.*$username") ; do
 
     kill -9 $_pid
 
@@ -2258,14 +2258,14 @@ timeout 30 strace $(< /var/run/zabbix/zabbix_agentd.pid)
 ###### Track processes and redirect output to a file
 
 ```bash
-ps auxw | grep '[a]pache' | awk '{print " -p " $2}' | \
+pgrep apache | sed 's/^/-p /' | \
 xargs strace -o /tmp/strace-apache-proc.out
 ```
 
 ###### Track with print time spent in each syscall and limit length of print strings
 
 ```bash
-ps auxw | grep '[i]init_policy' | awk '{print " -p " $2}' | \
+pgrep init_policy | sed 's/^/-p /' | \
 xargs strace -f -e trace=network -T -s 10000
 ```
 
@@ -2304,7 +2304,7 @@ diff <(cd directory1 && find | sort) <(cd directory2 && find | sort)
 ###### Compare output of two commands
 
 ```bash
-diff <(cat /etc/passwd) <(cut -f2 /etc/passwd)
+diff /etc/passwd <(cut -f2 /etc/passwd)
 ```
 
 ___

@@ -13,3 +13,6 @@
 ## 2026-05-20 - Parameter Expansion Over Subshells
 **Learning:** Replacing subshells and external binaries (`echo | cut`) with native bash parameter expansion (`${VAR%%:*}` and `${VAR##*:}`) eliminates process forks and drastically improves performance in shell scripts.
 **Action:** Always prefer native bash parameter expansion over piping to external commands for simple string manipulation.
+## 2024-05-18 - Replacing chained process inspection with pgrep
+**Learning:** Piping `ps` into `grep` and then `awk` introduces multiple unnecessary process forks, which slows down process ID retrieval. Using `pgrep` natively handles process name matching and user matching, avoiding multiple process forks.
+**Action:** When finding process IDs by name or user, always prefer `pgrep` over `ps | grep | awk` chains.
