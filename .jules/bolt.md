@@ -13,3 +13,6 @@
 ## 2026-05-20 - Parameter Expansion Over Subshells
 **Learning:** Replacing subshells and external binaries (`echo | cut`) with native bash parameter expansion (`${VAR%%:*}` and `${VAR##*:}`) eliminates process forks and drastically improves performance in shell scripts.
 **Action:** Always prefer native bash parameter expansion over piping to external commands for simple string manipulation.
+## 2024-05-18 - Optimize find commands with command batching
+**Learning:** Using `-exec ... \;` in `find` commands spawns a new process for every single matched file, causing severe performance degradation O(N) on large datasets.
+**Action:** Always prefer the `-exec ... +` syntax to batch arguments into fewer command executions, or use built-in options like `-delete` over `-exec rmdir {} \;`.
