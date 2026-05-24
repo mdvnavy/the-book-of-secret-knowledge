@@ -2119,7 +2119,7 @@ find . -type f -mtime +60 -delete
 ###### Recursively remove all empty sub-directories from a directory
 
 ```bash
-find . -depth  -type d  -empty -exec rmdir {} \;
+find . -type d -empty -delete
 ```
 
 ###### How to find all hard links to a file

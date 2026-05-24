@@ -13,3 +13,7 @@
 ## 2026-05-20 - Parameter Expansion Over Subshells
 **Learning:** Replacing subshells and external binaries (`echo | cut`) with native bash parameter expansion (`${VAR%%:*}` and `${VAR##*:}`) eliminates process forks and drastically improves performance in shell scripts.
 **Action:** Always prefer native bash parameter expansion over piping to external commands for simple string manipulation.
+
+## 2026-05-24 - Native Find Delete over Exec rmdir
+**Learning:** Using `find ... -exec rmdir {} \;` spawns a new sub-process fork for every single empty directory found, causing severe performance degradation on large directory structures. The native `-delete` flag completely bypasses subprocess forks and uses internal C-level APIs directly.
+**Action:** Always replace `find ... -exec rm ... \;` or `find ... -exec rmdir ... \;` with the built-in `-delete` action to eliminate process forks and drastically improve performance.
