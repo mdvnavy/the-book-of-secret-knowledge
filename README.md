@@ -2060,7 +2060,7 @@ find / -type f -size +20M
 ###### Find duplicate files (based on MD5 hash)
 
 ```bash
-find -type f -exec md5sum '{}' ';' | sort | uniq --all-repeated=separate -w 33
+find -type f -exec md5sum '{}' + | sort | uniq --all-repeated=separate -w 33
 ```
 
 ###### Change permission only for files
@@ -2119,7 +2119,7 @@ find . -type f -mtime +60 -delete
 ###### Recursively remove all empty sub-directories from a directory
 
 ```bash
-find . -depth  -type d  -empty -exec rmdir {} \;
+find . -mindepth 1 -type d -empty -delete
 ```
 
 ###### How to find all hard links to a file
@@ -2131,7 +2131,7 @@ find </path/to/dir> -xdev -samefile filename
 ###### Recursively find the latest modified files
 
 ```bash
-find . -type f -exec stat --format '%Y :%y %n' "{}" \; | sort -nr | cut -d: -f2- | head
+find . -type f -exec stat --format '%Y :%y %n' "{}" + | sort -nr | cut -d: -f2- | head
 ```
 
 ###### Recursively find/replace of a string with sed
@@ -2149,7 +2149,7 @@ find . -depth -name '*test*' -execdir bash -c 'mv -v "$1" "${1//foo/bar}"' _ {} 
 ###### Recursively find suid executables
 
 ```bash
-find / \( -perm -4000 -o -perm -2000 \) -type f -exec ls -la {} \;
+find / \( -perm -4000 -o -perm -2000 \) -type f -exec ls -la {} +
 ```
 
 ___
