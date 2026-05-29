@@ -17,3 +17,7 @@
 ## 2024-05-26 - Eliminate Process Forks in find -exec
 **Learning:** In bash script snippets processing files, using `find -exec ... \;` spawns a new subprocess for every matched file, leading to severe performance bottlenecks on large directories. The `rmdir` operation can be fully native.
 **Action:** Replace `find -exec ... \;` with `find -exec ... +` to batch arguments into a single subprocess execution. Replace `-exec rmdir {} \;` with `-delete` (using `-mindepth 1` if necessary to protect the root dir) to utilize find's native C-level deletion, completely bypassing subshells.
+
+## 2024-11-20 - Multi-line string replacements in README.md
+**Learning:** Using `sed` for complex, multi-line string replacements (especially those containing nested quotes, variables like `$_pid`, or backticks) is extremely fragile and prone to escaping errors.
+**Action:** Use a short inline Python script (via `python3 -c`) using `content.replace(old_block, new_block)` for reliable, multi-line text replacements in configuration or documentation files.
