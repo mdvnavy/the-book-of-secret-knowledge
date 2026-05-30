@@ -17,3 +17,7 @@
 ## 2024-05-26 - Eliminate Process Forks in find -exec
 **Learning:** In bash script snippets processing files, using `find -exec ... \;` spawns a new subprocess for every matched file, leading to severe performance bottlenecks on large directories. The `rmdir` operation can be fully native.
 **Action:** Replace `find -exec ... \;` with `find -exec ... +` to batch arguments into a single subprocess execution. Replace `-exec rmdir {} \;` with `-delete` (using `-mindepth 1` if necessary to protect the root dir) to utilize find's native C-level deletion, completely bypassing subshells.
+
+## 2026-05-30 - Replace chained ps/grep/awk inspections with native pkill
+**Learning:** Using `ps afx | grep | awk` to find and kill processes spawns multiple unnecessary subshells and process forks.
+**Action:** Replace chained process inspections with a single native `pkill -u "$(whoami)" -f <pattern>` command to completely eliminate process forks and drastically improve performance.
