@@ -1855,12 +1855,7 @@ cat > /etc/profile << __EOF__
 _after_logout() {
 
   username=$(whoami)
-
-  for _pid in $(ps afx | grep sshd | grep "$username" | awk '{print $1}') ; do
-
-    kill -9 $_pid
-
-  done
+  pkill -9 -f "sshd.*${username}@"
 
 }
 trap _after_logout EXIT

@@ -17,3 +17,9 @@
 ## 2024-05-26 - Eliminate Process Forks in find -exec
 **Learning:** In bash script snippets processing files, using `find -exec ... \;` spawns a new subprocess for every matched file, leading to severe performance bottlenecks on large directories. The `rmdir` operation can be fully native.
 **Action:** Replace `find -exec ... \;` with `find -exec ... +` to batch arguments into a single subprocess execution. Replace `-exec rmdir {} \;` with `-delete` (using `-mindepth 1` if necessary to protect the root dir) to utilize find's native C-level deletion, completely bypassing subshells.
+## 2024-06-02 - Eliminate Process Forks with Native pkill
+**Learning:** Using chained process inspections (like `ps afx | grep | awk`) to find and kill processes spawns multiple subshells and external binaries, causing significant overhead in bash scripts.
+**Action:** Replace these inefficient pipelines with a single native `pkill` command (e.g., `pkill -u "$username" <process_name>`) to bypass process forks entirely and drastically improve script execution speed.
+## 2024-06-02 - Pkill Matching Caveats
+**Learning:** While replacing `ps | grep | awk` with `pkill` removes subshells, it's critical to ensure the match criteria strictly preserves safety. Using `pkill -u root sshd` will kill the main SSH listener daemon (breaking the server) whereas matching the full process string (e.g. `pkill -f "sshd.*${username}@"`) specifically targets the user sessions and avoids matching the listener.
+**Action:** Always verify the actual command line strings of processes (e.g., using `ps afx`) before crafting `pkill -f` expressions, especially for critical daemons like sshd.
