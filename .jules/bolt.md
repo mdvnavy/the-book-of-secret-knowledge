@@ -17,3 +17,6 @@
 ## 2024-05-26 - Eliminate Process Forks in find -exec
 **Learning:** In bash script snippets processing files, using `find -exec ... \;` spawns a new subprocess for every matched file, leading to severe performance bottlenecks on large directories. The `rmdir` operation can be fully native.
 **Action:** Replace `find -exec ... \;` with `find -exec ... +` to batch arguments into a single subprocess execution. Replace `-exec rmdir {} \;` with `-delete` (using `-mindepth 1` if necessary to protect the root dir) to utilize find's native C-level deletion, completely bypassing subshells.
+## 2026-06-06 - Optimize process termination using pkill
+**Learning:** Replacing chained process inspections (e.g., `ps aux | grep | awk`) with native `pkill` commands (e.g., `pkill -f`) completely eliminates process forks and subshell overhead. Additionally, when writing scripts via heredoc that contain variables meant for runtime execution (e.g., `whoami`), the heredoc delimiter must be quoted to prevent premature variable interpolation.
+**Action:** Always prefer `pkill` or `pgrep` over piping `ps` output. Always quote heredoc delimiters unless interpolation during script generation is explicitly desired.
