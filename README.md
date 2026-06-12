@@ -2066,14 +2066,14 @@ find -type f -exec md5sum '{}' + | sort | uniq --all-repeated=separate -w 33
 ###### Change permission only for files
 
 ```bash
-cd /var/www/site && find . -type f -exec chmod 766 {} \;
+cd /var/www/site && find . -type f -exec chmod 766 {} +
 cd /var/www/site && find . -type f -exec chmod 664 {} +
 ```
 
 ###### Change permission only for directories
 
 ```bash
-cd /var/www/site && find . -type d -exec chmod g+x {} \;
+cd /var/www/site && find . -type d -exec chmod g+x {} +
 cd /var/www/site && find . -type d -exec chmod g+rwx {} +
 ```
 

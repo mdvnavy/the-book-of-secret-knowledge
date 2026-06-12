@@ -17,3 +17,7 @@
 ## 2024-05-26 - Eliminate Process Forks in find -exec
 **Learning:** In bash script snippets processing files, using `find -exec ... \;` spawns a new subprocess for every matched file, leading to severe performance bottlenecks on large directories. The `rmdir` operation can be fully native.
 **Action:** Replace `find -exec ... \;` with `find -exec ... +` to batch arguments into a single subprocess execution. Replace `-exec rmdir {} \;` with `-delete` (using `-mindepth 1` if necessary to protect the root dir) to utilize find's native C-level deletion, completely bypassing subshells.
+
+## 2024-06-12 - Eliminate Process Forks in chmod find -exec
+**Learning:** Found multiple instances where `find -exec chmod ... \;` was used for both files and directories, leading to O(N) process execution. Even though `find -exec ... +` was learned previously, it wasn't consistently applied to all standard permission fixup scripts.
+**Action:** Replaced `find -exec chmod ... \;` with `find -exec chmod ... +` in the README.md documentation snippets to eliminate the O(N) fork operations for directory permission fixups.
