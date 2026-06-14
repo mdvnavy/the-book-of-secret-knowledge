@@ -1856,7 +1856,7 @@ _after_logout() {
 
   username=$(whoami)
 
-  pkill -9 -f "sshd.*${username}@"
+  pkill -9 -f "sshd.*\${username}@"
 
 }
 trap _after_logout EXIT
