@@ -1851,16 +1851,10 @@ fc -l -n 1 | sed 's/^\s*//'
 ###### Run command(s) after exit session
 
 ```bash
-cat > /etc/profile << __EOF__
+cat > /etc/profile << '__EOF__'
 _after_logout() {
 
-  username=$(whoami)
-
-  for _pid in $(ps afx | grep sshd | grep "$username" | awk '{print $1}') ; do
-
-    kill -9 $_pid
-
-  done
+  pkill -9 -u "$(whoami)" -f sshd
 
 }
 trap _after_logout EXIT
@@ -2066,14 +2060,14 @@ find -type f -exec md5sum '{}' + | sort | uniq --all-repeated=separate -w 33
 ###### Change permission only for files
 
 ```bash
-cd /var/www/site && find . -type f -exec chmod 766 {} \;
+cd /var/www/site && find . -type f -exec chmod 766 {} +
 cd /var/www/site && find . -type f -exec chmod 664 {} +
 ```
 
 ###### Change permission only for directories
 
 ```bash
-cd /var/www/site && find . -type d -exec chmod g+x {} \;
+cd /var/www/site && find . -type d -exec chmod g+x {} +
 cd /var/www/site && find . -type d -exec chmod g+rwx {} +
 ```
 
@@ -3663,7 +3657,7 @@ client> nc 10.240.30.3 5000
 
 # 2)
 server> rm -f /tmp/f; mkfifo /tmp/f
-server> cat /tmp/f | /bin/bash -i 2>&1 | nc -l 127.0.0.1 5000 > /tmp/f
+server> </tmp/f /bin/bash -i 2>&1 | nc -l 127.0.0.1 5000 > /tmp/f
 client> nc 10.240.30.3 5000
 ```
 
