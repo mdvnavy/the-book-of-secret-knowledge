@@ -1856,7 +1856,11 @@ _after_logout() {
 
   username=$(whoami)
 
-  pkill -9 -f "sshd.*${username}" || true
+  for _pid in $(ps afx | grep sshd | grep "$username" | awk '{print $1}') ; do
+
+    kill -9 $_pid
+
+  done
 
 }
 trap _after_logout EXIT
