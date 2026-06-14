@@ -21,3 +21,7 @@
 ## 2024-06-11 - Replace Chained Process Inspection with Native pkill
 **Learning:** Shell scripts terminating processes based on chained inspection (e.g., `for pid in $(ps aux | grep sshd | grep username | awk); do kill $pid; done`) suffer unnecessary performance penalty by spawning multiple process forks (`ps`, `grep`, `grep`, `awk`, and a `kill` for each process).
 **Action:** Replace `ps | grep | awk` loops with a native `pkill -f` command (e.g., `pkill -9 -f "sshd.*${username}" || true`). This completely eliminates all subprocess forks, avoids the risk of prematurely aborting `set -e` scripts if nothing matches, and vastly reduces the snippet's runtime.
+
+## 2024-06-11 - Unquoted Heredoc with pkill Vulnerability
+**Learning:** Using variables like `${username}` inside an unquoted heredoc (e.g., `cat > /etc/profile << __EOF__`) evaluates them prematurely when writing the file. If `${username}` is empty at generation time, `pkill -9 -f "sshd.*${username}"` evaluates to `pkill -9 -f "sshd.*"`, killing all sshd sessions instead of just the user's.
+**Action:** When updating shell snippets using unquoted heredocs, always manually escape variables (e.g., `\${username}`) so they are preserved literally in the script and evaluated dynamically when the script actually runs.
