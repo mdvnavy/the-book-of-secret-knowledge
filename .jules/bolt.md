@@ -17,6 +17,6 @@
 ## 2024-05-26 - Eliminate Process Forks in find -exec
 **Learning:** In bash script snippets processing files, using `find -exec ... \;` spawns a new subprocess for every matched file, leading to severe performance bottlenecks on large directories. The `rmdir` operation can be fully native.
 **Action:** Replace `find -exec ... \;` with `find -exec ... +` to batch arguments into a single subprocess execution. Replace `-exec rmdir {} \;` with `-delete` (using `-mindepth 1` if necessary to protect the root dir) to utilize find's native C-level deletion, completely bypassing subshells.
-## 2024-05-24 - Replace chained process inspection loop with pkill
-**Learning:** Using chained tools like `ps | grep | awk` inside a `for` loop to find and kill processes generates excessive subprocess overhead and forks.
-**Action:** Replace manual iteration and chained inspection with native `pkill` (or `pgrep`) with appropriate flags (e.g., `-u`, `-f`) for drastically improved performance and cleaner shell scripts.
+## 2024-05-24 - Replace grep/xargs pipeline with awk and native while loops
+**Learning:** Using `grep -Eo "[1-9][0-9]*"` to extract ports from `netstat` output is buggy because it matches *any* numeric sequence (like IP address octets), not just the port. Furthermore, piping the result to `xargs -I {} sh -c "..."` spawns a new subshell and external binary for every line, drastically degrading performance.
+**Action:** Replace fragile `grep` extractions with precise `awk` field parsing (e.g., `awk '/^tcp / {n=split($4, a, ":"); print a[n]}'`). Replace O(N) `xargs sh -c` invocations with a native bash `while read` loop to eliminate unnecessary process forks.
