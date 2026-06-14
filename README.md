@@ -1851,11 +1851,16 @@ fc -l -n 1 | sed 's/^\s*//'
 ###### Run command(s) after exit session
 
 ```bash
-cat > /etc/profile << '__EOF__'
+cat > /etc/profile << __EOF__
 _after_logout() {
 
   username=$(whoami)
-  pkill -9 -f "sshd.*${username}@" || true
+
+  for _pid in $(ps afx | grep sshd | grep "$username" | awk '{print $1}') ; do
+
+    kill -9 $_pid
+
+  done
 
 }
 trap _after_logout EXIT
