@@ -17,3 +17,6 @@
 ## 2024-05-26 - Eliminate Process Forks in find -exec
 **Learning:** In bash script snippets processing files, using `find -exec ... \;` spawns a new subprocess for every matched file, leading to severe performance bottlenecks on large directories. The `rmdir` operation can be fully native.
 **Action:** Replace `find -exec ... \;` with `find -exec ... +` to batch arguments into a single subprocess execution. Replace `-exec rmdir {} \;` with `-delete` (using `-mindepth 1` if necessary to protect the root dir) to utilize find's native C-level deletion, completely bypassing subshells.
+## 2024-06-15 - netstat parsing and xargs process forks
+**Learning:** Using regex like `grep -Eo "[1-9][0-9]*"` to parse ports from netstat can erroneously extract IP address octets instead of the actual port. Furthermore, piping these results into `xargs -I {} sh -c "..."` introduces O(N) subshell process forks, which degrades performance on servers with many listening ports.
+**Action:** Replace fragile grep regex with explicit column parsing via `awk` (e.g., `awk '/^tcp / {split($4, a, ":"); print a[length(a)]}'`), and replace the `xargs -I {} sh -c "..."` pattern with a native shell `while read -r; do ... done` loop to eliminate subprocess overhead.
