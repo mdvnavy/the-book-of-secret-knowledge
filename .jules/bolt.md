@@ -17,3 +17,6 @@
 ## 2024-05-26 - Eliminate Process Forks in find -exec
 **Learning:** In bash script snippets processing files, using `find -exec ... \;` spawns a new subprocess for every matched file, leading to severe performance bottlenecks on large directories. The `rmdir` operation can be fully native.
 **Action:** Replace `find -exec ... \;` with `find -exec ... +` to batch arguments into a single subprocess execution. Replace `-exec rmdir {} \;` with `-delete` (using `-mindepth 1` if necessary to protect the root dir) to utilize find's native C-level deletion, completely bypassing subshells.
+## 2024-05-24 - Optimize netstat port extraction and iteration
+**Learning:** Using `grep -Eo "[1-9][0-9]*"` to extract ports from `netstat` output is buggy as it matches IP octets instead of just the port. Also, using `xargs -I {} sh -c` for iteration creates an O(N) process fork overhead, which is inefficient.
+**Action:** Use `awk '/pattern/ {n=split($4, a, ":"); print a[n]}'` for precise field extraction and native bash `while read -r line; do ... done` loops to avoid process forks.
