@@ -2252,14 +2252,14 @@ timeout 30 strace $(< /var/run/zabbix/zabbix_agentd.pid)
 ###### Track processes and redirect output to a file
 
 ```bash
-ps auxw | grep '[a]pache' | awk '{print " -p " $2}' | \
+pgrep -f apache | awk '{print " -p " $1}' | \
 xargs strace -o /tmp/strace-apache-proc.out
 ```
 
 ###### Track with print time spent in each syscall and limit length of print strings
 
 ```bash
-ps auxw | grep '[i]init_policy' | awk '{print " -p " $2}' | \
+pgrep -f init_policy | awk '{print " -p " $1}' | \
 xargs strace -f -e trace=network -T -s 10000
 ```
 
