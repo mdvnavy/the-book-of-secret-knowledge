@@ -3858,7 +3858,7 @@ watch "netstat -plan | grep :443 | awk {'print \$5'} | cut -d: -f 1 | sort | uni
 ###### Grab banners from local IPv4 listening ports
 
 ```bash
-netstat -nlt | grep 'tcp ' | grep -Eo "[1-9][0-9]*" | xargs -I {} sh -c "echo "" | nc -v -n -w1 127.0.0.1 {}"
+netstat -nlt | awk '/^tcp / {n=split($4, a, ":"); print a[n]}' | while read -r port; do echo "" | nc -v -n -w1 127.0.0.1 "$port"; done
 ```
 
 ___
